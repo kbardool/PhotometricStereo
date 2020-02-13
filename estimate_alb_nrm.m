@@ -105,18 +105,18 @@ t2 = toc;
 
 fprintf('   Using Shadow Trick : %s    Using mldsolve: %s  linsolve: %s\n', ....
             mat2str(shadow_trick), mat2str(~use_linsolve), mat2str(use_linsolve) );
-fprintf('   Number of Pixels= [0,0,0]: %d \n',blackPixel);
-fprintf('   Number of Rank Zero      : %d \n\n',rankZeroMat);
-
+fprintf('   Number of Pixels= [0,0,0]: %d \n\n',blackPixel);
 fprintf('   Rank(AugMat) > Rank(A)   : %d \n',AugRankLargerCnt);
 fprintf('   Rank(AugMat) = Rank(A)   : %d \n',AugRankEqualCnt);
-fprintf('   Rank(AugMat) < Rank(A)   : %d \n',AugRankSmallerCnt);
+fprintf('   Rank(AugMat) < Rank(A)   : %d \n\n',AugRankSmallerCnt);
+fprintf('   Number of Rank Zero      : %d \n',rankZeroMat);
 fprintf('   Number of Singular Mats  : %d \n',singularMat);
 fprintf('   Number of Rank Deficient : %d \n\n',rankDeficientMat);
 
-fprintf('   Pixels with Albedo > 2.0 : %d \n',size(find(albedo > 2.0),1));
+fprintf('   Pixels with Albedo > 1.0 : %d \n',size(find(albedo > 1.0),1)); 
 fprintf('   Pixels with Albedo > 1.5 : %d \n',size(find(albedo > 1.5),1));
-fprintf('   Pixels with Albedo > 1.0 : %d \n\n',size(find(albedo > 1.0),1));  
+fprintf('   Pixels with Albedo > 2.0 : %d \n\n',size(find(albedo > 2.0),1));
+
 fprintf('   Albedo      min: %8.4f  max: %8.4f \n', min(albedo,[],'all'), max(albedo,[],'all'));
 fprintf('   Normals X   min: %8.4f  max: %8.4f \n', min(normal(:,:,1),[],'all'), max(normal(:,:,1),[],'all'));    
 fprintf('   Normals Y   min: %8.4f  max: %8.4f \n', min(normal(:,:,2),[],'all'), max(normal(:,:,2),[],'all'));    

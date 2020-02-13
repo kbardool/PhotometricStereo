@@ -7,9 +7,9 @@ rows = 1:step:512;
 cols = 1:step:512;
 
 [XX, YY] = meshgrid(rows, cols);
-
+ttl = 'Show all three';
 % plot the results
-figure
+figure('Name', ttl, 'visible', visible);
 subplot(1, 3, 1);
 
 % [hgt, wid] = size(height_map);

@@ -11,7 +11,7 @@ function show_model(albedo, height_map,ttl, dtls, fn, visible)
     [X,Y] = meshgrid(1:wid, 1:hgt);
     H = height_map;
     A = albedo;
-    figure('Name', ttl, 'visible', visible);
+    hFig = figure('Name', ttl, 'visible', visible);
     % H = rot90(fliplr(height_map), 2);
     % A = rot90(fliplr(albedo), 2);
     axis ij;
@@ -39,7 +39,7 @@ function show_model(albedo, height_map,ttl, dtls, fn, visible)
     % set(gca, 'ZTick', []);
     saveas(gca,fn,'png');
     savefig(fn);
-    fprintf('-- Save Show Model to : %s \n',fn)
+%     fprintf('-- Save Show Model to : %s \n',fn)
 
 
 end

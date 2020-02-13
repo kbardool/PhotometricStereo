@@ -12,8 +12,8 @@ function show_height_map(height_map, ttl,  step, dtls, fn, visible)
     % [XX,YY] = meshgrid(1:wid, 1:hgt);
     % ax = gca;
 
-    figure('Name', ttl, 'visible', visible);
-    surf(XX,YY,height_map(rows,cols), 'FaceColor', 'interp','FaceAlpha',0.7  )
+    hFig = figure('Name', ttl, 'visible', visible);
+    surf(XX ,YY ,height_map(rows,cols), 'FaceColor', 'interp','FaceAlpha',0.7  )
     axis ij;
     ttl = {ttl; dtls }; 
     title(ttl, 'Interpreter', 'latex');
@@ -21,8 +21,8 @@ function show_height_map(height_map, ttl,  step, dtls, fn, visible)
     ylabel("Y");
     zlabel("Z");
     colorbar;
-    
+    set(hFig, 'CreateFcn', 'set(gcbo,''Visible'',''on'')'); 
     saveas(gca,fn,'png');
     savefig(fn);
-    fprintf('-- Save Height Map to : %s \n',fn)  
+%     fprintf('-- Save Height Map to : %s \n',fn)  
 end

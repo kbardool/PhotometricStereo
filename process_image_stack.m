@@ -1,29 +1,28 @@
-function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsolve, Z_dist, shadow_trick, visible, visualize, base)
+function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsolve, Z_dist, shadow_trick, display_plots, save_plots, base)
 
     disp('Computing surface albedo and normal map...');
     [albedo, normals, surface] = estimate_alb_nrm(image_stack, scriptV, shadow_trick, use_linsolve);
  
-    fprintf('\n');
-    %%--
-
-
     %%--------------------------------------------------------------------------------------------
     %%- Visualizations 
     %%--------------------------------------------------------------------------------------------
-    if visualize
+    if save_plots
         disp('Write Visualizations  ');
-        
-        Z_diststr = replace(sprintf('%3.2f',Z_dist), ".","");
-        ttlImages= size(image_stack,3);
+        ttlImages = size(image_stack,3);        
         dtls = strcat('Num Images: \vspace{2mm}', mat2str(ttlImages), '\hspace{2mm} Z: ', mat2str(Z_dist), ...
         '\hspace{4mm} Shadow Trick: \hspace{2mm}', mat2str(shadow_trick));
-
+                
         if shadow_trick
-            pfx = 'WST_';
+            prefix = 'WST_';
         else
-            pfx = 'NST_';
+            prefix = 'NST_';
         end
+        
+        Z_dist_str = replace(sprintf('%3.2f',Z_dist), ".","");
+        ttlImages_str = sprintf('%03d',ttlImages);        
+        suffix = strcat( ttlImages_str,'_Z', Z_dist_str);
 
+        
         stepsize = 20;
         rows = 1:stepsize:512;
         cols = 1:stepsize:512;
@@ -43,18 +42,19 @@ function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsol
         A2 = albedo2(rows,cols);
 
         %%--
-        f = figure('Name', '1- Albedo 2D','visible',visible);
+        hFig = figure('Name', '1- Albedo 2D','visible',display_plots);
         imshow(albedo2);
         ttl = {'Albedo ( pixels w/ albedo $>$ 1 set to zero)'; dtls }; 
         title(ttl, 'Interpreter', 'latex');
         colorbar;
-        fn = strcat(base,'/_Albedo2D/', pfx, 'Albedo2D_',mat2str(ttlImages),'_Z',Z_diststr );
+        fn = strcat(base,'/_Albedo2D/', prefix, 'Albedo2D_', suffix );
+        set(hFig, 'CreateFcn', 'set(gcbo,''display_plots'',''on'')'); 
         saveas(gca,fn,'png');
         savefig(fn);
-        fprintf('-- Save Adebo 2D to : %s \n',fn)
+%         fprintf('-- Save Adebo 2D to : %s \n',fn)
 
         %%--
-        figure('Name', '2- Surface using A (Non-normalized Albedo)','visible',visible)
+        hFig = figure('Name', '2- Surface using A (Non-normalized Albedo)','visible',display_plots);
         surf(XX,YY, A, 'FaceColor', 'interp')
         axis ij;
         ttl = {"Aldebo: $\rho(x,y) = \mid g(x,y)\mid$ "; dtls}; 
@@ -66,13 +66,14 @@ function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsol
         hold on
         surf(XX,YY,ZZ1,'FaceColor','red', 'FaceAlpha','0.6');
         hold off
-        fn = strcat(base,'/_Albedos/', pfx, 'Albedo_',mat2str(ttlImages),'_Z', Z_diststr );
+        fn = strcat(base,'/_Albedos/', prefix, 'Albedo_', suffix );
+        set(hFig, 'CreateFcn', 'set(gcbo,''display_plots'',''on'')'); 
         saveas(gca,fn,'png');
         savefig(fn);
-        fprintf('-- Save Albedo plot to : %s \n',fn)
+%         fprintf('-- Save Albedo plot to : %s \n',fn)
 
         %%--
-        figure('Name', '3- Surface from normals ','visible',visible);
+        hFig = figure('Name', '3- Surface from normals ','visible',display_plots);
         surf(XX,YY,Z, 'FaceColor', 'interp');
         axis ij;
         ttl = {"Surface $ N = \frac{g}{\mid g\mid}$ "; dtls }; 
@@ -81,13 +82,14 @@ function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsol
         ylabel("Y");
         zlabel("Z");
         zlim([-0.05,1.75]);
-        fn = strcat(base,'/_NormalsSurface/', pfx, 'SurfaceNormals_',mat2str(ttlImages),'_Z', Z_diststr);
+        fn = strcat(base,'/_NormalsSurface/', prefix, 'SurfaceNormals_', suffix);
+        set(hFig, 'CreateFcn', 'set(gcbo,''display_plots'',''on'')'); 
         saveas(gca,fn,'png');
         savefig(fn);
-        fprintf('-- Save Surface from Normals to : %s \n',fn)
+%         fprintf('-- Save Surface from Normals to : %s \n',fn)
 
         %%--
-        figure('Name', '5 - Surface Normals','visible',visible)
+        hFig = figure('Name', '5 - Surface Normals','visible',display_plots);
         surfnorm(XX,YY,Z, 'FaceAlpha',0.3, 'EdgeColor', 'none');
         ttl = {"Surface $ N = \frac{g}{\mid g\mid}$ "; dtls }; 
         title(ttl, 'Interpreter', 'latex')
@@ -95,22 +97,24 @@ function [albedo, normals]= process_image_stack(image_stack, scriptV, use_linsol
         ylabel("Y");
         zlabel("Z");
         zlim([0.6,1.2]);
-        fn = strcat(base,'/_Normals/', pfx, 'Nrmls_',mat2str(ttlImages),'_Z', Z_diststr);
+        fn = strcat(base,'/_Normals/', prefix, 'Nrmls_', suffix);
+        set(hFig, 'CreateFcn', 'set(gcbo,''display_plots'',''on'')'); 
         saveas(gca,fn,'png');
         savefig(fn);
-        fprintf('-- Save Surface Normals to : %s \n',fn)
+%         fprintf('-- Save Surface Normals to : %s \n',fn)
 
         %%--
-        figure('Name', '4- Albedo Histogram','visible',visible);
+        hFig = figure('Name', '4- Albedo Histogram','visible',display_plots);
         histogram(albedo);
         ttl = {"Albedo Histogram "; dtls }; 
         title(ttl , 'Interpreter', 'latex');
         xlabel("Norm g");
         ylabel("count");
-        fn = strcat(base,'/_AlbedoHistograms/', pfx, 'AlbedoHistogram_',mat2str(ttlImages),'_Z', Z_diststr );
+        fn = strcat(base,'/_AlbedoHistograms/', prefix, 'AlbedoHistogram_', suffix );
+        set(hFig, 'CreateFcn', 'set(gcbo,''display_plots'',''on'')'); 
         saveas(gca,fn,'png');
         savefig(fn);
-        fprintf('-- Save Albedo Histogram to : %s \n',fn)
+%         fprintf('-- Save Albedo Histogram to : %s \n',fn)
 
 
     

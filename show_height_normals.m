@@ -11,7 +11,7 @@ function show_height_normals(hm, ttl,  step, dtls, fn, visible)
     [XX, YY] = meshgrid(rows, cols);
     Z = hm(rows, cols);
 
-    figure('Name', ttl, 'visible', visible);
+    hFig = figure('Name', ttl, 'visible', visible);
     surf( Z, 'FaceColor', 'interp','FaceAlpha',0.7);
     hold on
     [Nx,Ny,Nz] = surfnorm(hm);
@@ -61,8 +61,8 @@ function show_height_normals(hm, ttl,  step, dtls, fn, visible)
     % zlabel(' Z');
     % colorbar
     % hold off
-
+    set(hFig, 'CreateFcn', 'set(gcbo,''Visible'',''on'')'); 
     saveas(gca,fn,'png');
     savefig(fn);
-    fprintf('-- Save Height/Normals Map to : %s \n',fn)    
+%     fprintf('-- Save Height/Normals Map to : %s \n',fn)    
 end

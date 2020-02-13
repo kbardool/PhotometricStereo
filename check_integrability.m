@@ -23,18 +23,7 @@ SE = zeros(height, width);
 % ========================================================================
 p(:,:) = normals(:,:,1) ./ normals(:,:,3);
 q(:,:) = normals(:,:,2) ./ normals(:,:,3);
-% for row= 1:height
-%     for col = 1:width
-%         if normals(row,col,:) == 0
-% %             fprintf(' row: %4d col: %4d , Normal Zero: %f %f %f \n', row,col, normals(row,col,:));
-%             continue
-%         else
-%             p(row,col) = normals(row,col,1) / normals(row,col,3);
-%             q(row,col) = normals(row,col,2) / normals(row,col,3);
-% %             fprintf(' row: %4d col: %4d , Normal is not Zero: %f %f %f \n', r,c, normals(r,c,:));            
-%         end
-%     end
-% end
+    
 % % % for row = 1:height-1
 % % %     p(row,:) = normals(row+1,:,3) - normals(row,:,3);
 % % % end
@@ -43,7 +32,7 @@ q(:,:) = normals(:,:,2) ./ normals(:,:,3);
 % % % end
 
 % ========================================================================
-fprintf('   Before - Number of Norm_z = 0: %d    \n', size(find(normals(:,:,3)),1 ));
+fprintf('   Before - Number of Norm_z = 0: %d    \n', size(find(normals(:,:,3) == 0),1 ));
 fprintf('   Before - Number of NaNs  in p: %d   q: %d \n', size(find(isnan(p)),1), size(find(isnan(q)),1) );
 fprintf('   Before - Number of Zeros in p: %d   q: %d \n', size(find(p == 0),1)  , size(find(q == 0),1) );
  
@@ -52,8 +41,8 @@ p(isnan(p)) = 0;
 q(isnan(q)) = 0;
 
  
-fprintf('   After  - Number of = 0 in p: %d   q: %d \n',size(find(p == 0 ),1),size(find(q ==0),1));
-fprintf('   After  - Number of <> 0 in p: %d   q: %d \n',size(find(p ~= 0 ),1),size(find(q ~=0),1));
+fprintf('   After  - Number of Zeros in p: %d   q: %d \n',size(find(p == 0 ),1),size(find(q ==0),1));
+fprintf('   After  - Number of <> 0 in p : %d   q: %d \n',size(find(p ~= 0 ),1),size(find(q ~=0),1));
 % ========================================================================
 % YOUR CODE GOES HERE
 % approximate second derivate by neighbor difference
