@@ -1,4 +1,4 @@
-# Lab1 - Part1: Photometric stereo
+ # Photometric stereo
 
 ## Instructions
 
